@@ -48,3 +48,27 @@ output "nat_gateway_id" {
   description = "NAT Gateway ID"
   value       = aws_nat_gateway.main.id
 }
+output "alb_dns_name" {
+  description = "DNS name of the Application Load Balancer"
+  value       = aws_lb.app.dns_name
+}
+
+output "alb_url" {
+  description = "HTTP URL of the application"
+  value       = "http://${aws_lb.app.dns_name}"
+}
+
+output "autoscaling_group_name" {
+  description = "Name of the application Auto Scaling Group"
+  value       = aws_autoscaling_group.app.name
+}
+
+output "launch_template_id" {
+  description = "ID of the EC2 launch template"
+  value       = aws_launch_template.app.id
+}
+
+output "ec2_iam_role" {
+  description = "IAM role attached to EC2 instances"
+  value       = aws_iam_role.ec2.name
+}
