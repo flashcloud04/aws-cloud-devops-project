@@ -106,3 +106,8 @@
 - [x] Two EC2 instances across two AZs
 - [x] ALB health checks
 - [x] End-to-end ALB → EC2 test
+
+### Monitoring & Alerting
+- [x] SNS alert topic
+- [x] CloudWatch EC2 CPU alarm
+- [x] CloudWatch ALB unhealthy host alarm

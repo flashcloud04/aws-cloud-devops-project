@@ -72,3 +72,17 @@ output "ec2_iam_role" {
   description = "IAM role attached to EC2 instances"
   value       = aws_iam_role.ec2.name
 }
+output "sns_alert_topic_arn" {
+  description = "SNS topic ARN used for infrastructure alerts"
+  value       = aws_sns_topic.alerts.arn
+}
+
+output "ec2_cpu_alarm_name" {
+  description = "CloudWatch alarm for high EC2 CPU utilization"
+  value       = aws_cloudwatch_metric_alarm.ec2_cpu_high.alarm_name
+}
+
+output "alb_unhealthy_hosts_alarm_name" {
+  description = "CloudWatch alarm for unhealthy ALB targets"
+  value       = aws_cloudwatch_metric_alarm.alb_unhealthy_hosts.alarm_name
+}
