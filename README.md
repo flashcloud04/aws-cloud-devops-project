@@ -1,238 +1,36 @@
-AWS Cloud DevOps Project — Progress
-Project Goal
+AWS Cloud DevOps Project
 
-Build a production-style AWS Cloud/DevOps application demonstrating:
+A production-style AWS Cloud and DevOps portfolio project demonstrating Infrastructure as Code, networking, security, compute, databases, monitoring, containerization, and CI/CD.
 
-AWS infrastructure
-Terraform Infrastructure as Code
-Networking and security
-Compute and load balancing
-Database and secrets management
-Monitoring and alerting
+The project is built incrementally using Terraform, AWS, Git, GitHub, Docker, and GitHub Actions, with the goal of creating a reproducible and maintainable cloud application environment.
+
+Project Goals
+
+This project is designed to demonstrate practical skills in:
+
+AWS cloud architecture
+Infrastructure as Code with Terraform
+AWS networking and security
+IAM and least-privilege access
+EC2 and Auto Scaling
+Application Load Balancing
+PostgreSQL on Amazon RDS
+AWS Secrets Manager
+CloudWatch monitoring
+SNS notifications
 Docker and containerization
-ECR and ECS/Fargate
+Amazon ECR
+Amazon ECS / Fargate
 GitHub Actions CI/CD
-Serverless architecture
-CloudFront, Route 53 and ACM
-Security, reliability and cost-awareness
-Environment
-AWS Region: us-east-1
-Terraform: 1.16.2
-Terraform Provider: AWS ~> 6.0
-Source Control: Git + GitHub
-AWS Environment: Pluralsight AWS Sandbox
-Terraform State: Local for learning phase
-
-Pluralsight AWS Sandbox resources are temporary. GitHub and Terraform code are the permanent source of truth.
-
-Completed Milestones
-Day 0 — Project Setup
-
-Git installed and configured
-
-GitHub repository created
-
-Local project structure created
-
-.gitignore configured
-
-Terraform installed
-
-AWS CLI installed and configured
-
-AWS credentials kept outside the repository
-
-Terraform initialized
-
-Initial project committed and pushed to GitHub
-
-Day 1 — Terraform + S3 + Networking
-Terraform
-
-Terraform provider configuration
-
-Terraform variables
-
-Terraform outputs
-
-Terraform formatting
-
-Terraform validation
-
-Terraform plan/apply workflow
-
-.terraform.lock.hcl committed
-
-Terraform state excluded from Git
-
-S3
-
-S3 bucket created with Terraform
-
-S3 bucket tagged
-
-S3 bucket outputs configured
-
-S3 bucket verified using AWS CLI
-
-VPC Networking
-
-VPC created
-
-VPC CIDR 10.0.0.0/16
-
-DNS support enabled
-
-DNS hostnames enabled
-
-Internet Gateway
-
-Public subnet A
-
-Public subnet B
-
-Private subnet A
-
-Private subnet B
-
-Elastic IP for NAT Gateway
-
-NAT Gateway
-
-Public route table
-
-Private route table
-
-Public route → Internet Gateway
-
-Private route → NAT Gateway
-
-Route table associations
-
-Networking verified using AWS CLI
-
-Day 2 — IAM + EC2 + Load Balancing
-IAM
-
-EC2 IAM role
-
-EC2 instance profile
-
-AmazonSSMManagedInstanceCore policy
-
-IAM-based EC2 management without SSH keys
-
-Security Groups
-
-ALB security group
-
-EC2 security group
-
-Internet → ALB HTTP access
-
-ALB → EC2 HTTP access
-
-Direct Internet → EC2 access blocked
-
-EC2
-
-Amazon Linux 2023 AMI discovery
-
-EC2 Launch Template
-
-t3.micro instance configuration
-
-Nginx installation using user_data
-
-Custom application landing page
-
-Application Load Balancer
-
-Application Load Balancer
-
-Public ALB subnets
-
-Target Group
-
-HTTP listener
-
-ALB health checks
-
-Auto Scaling
-
-Auto Scaling Group
-
-Desired capacity: 2
-
-Minimum capacity: 2
-
-Maximum capacity: 2
-
-EC2 instances distributed across private subnets
-
-EC2 instances registered with ALB target group
-
-ELB health checks enabled
-
-End-to-End Test
-
-Both EC2 instances InService
-
-Both EC2 instances Healthy
-
-ALB successfully routed traffic to EC2
-
-Application tested using curl
-
-Monitoring & Alerting
-CloudWatch
-
-CloudWatch EC2 CPU alarm
-
-EC2 CPU threshold configured
-
-CloudWatch ALB unhealthy-host alarm
-
-ALB target health monitoring
-
-SNS
-
-SNS alert topic
-
-CloudWatch alarms connected to SNS
-
-Database & Secrets
-RDS
-
-PostgreSQL RDS instance
-
-RDS private deployment
-
-RDS subnet group
-
-RDS security group
-
-PostgreSQL port 5432
-
-EC2 → RDS access only
-
-RDS encryption enabled
-
-RDS verified as available
-
-RDS verified as not publicly accessible
-
-Secrets Manager
-
-Database secret created
-
-Random database password generated
-
-Database credentials stored in Secrets Manager
-
-Database password excluded from Terraform outputs
-
-Current Architecture
+Serverless AWS services
+DNS, HTTPS and CloudFront
+Terraform modules and remote state
+Cost awareness and cloud security
+
+The project is intentionally built in stages so that each AWS service has a practical purpose rather than being added simply to increase the number of services used.
+
+Architecture
+Current Infrastructure
                          INTERNET
                             │
                             ▼
@@ -260,11 +58,143 @@ Current Architecture
                            ▲
                            │
                   Secrets Manager
-                           
+
        CloudWatch ───────► SNS Alerts
-       
+
        S3 ───────────────► Project Storage
-Terraform Structure
+AWS Infrastructure
+Networking
+
+The project currently contains:
+
+VPC
+CIDR: 10.0.0.0/16
+DNS support
+DNS hostnames
+Internet Gateway
+Two public subnets
+Two private subnets
+NAT Gateway
+Elastic IP
+Public route table
+Private route table
+Route table associations
+
+The public subnets are used by the Application Load Balancer.
+
+The private subnets are used by the application EC2 instances and RDS.
+
+Compute
+
+The application compute layer currently includes:
+
+EC2 Launch Template
+Amazon Linux 2023
+t3.micro
+Auto Scaling Group
+Desired capacity: 2
+Minimum capacity: 2
+Maximum capacity: 2
+EC2 instances deployed across two Availability Zones
+Nginx demonstration application
+
+The EC2 instances are deployed in private subnets.
+
+Load Balancing
+
+The project uses:
+
+Application Load Balancer
+Public subnets
+Target Group
+HTTP listener
+Health checks
+
+Traffic flow:
+
+Internet
+   ↓
+ALB :80
+   ↓
+Target Group
+   ↓
+EC2 :80
+
+The ALB has been verified to successfully route traffic to the EC2 instances.
+
+Security
+
+Security groups are designed around application tiers:
+
+Internet
+   ↓
+ALB Security Group
+   ↓
+EC2 Security Group
+   ↓
+RDS Security Group
+
+Current access rules include:
+
+Internet → ALB HTTP/HTTPS
+ALB → EC2 HTTP
+EC2 → RDS PostgreSQL 5432
+Direct Internet → EC2 blocked
+Direct Internet → RDS blocked
+IAM
+
+EC2 uses an IAM role with:
+
+AmazonSSMManagedInstanceCore
+
+This allows management through AWS Systems Manager without requiring traditional SSH access.
+
+Future iterations will introduce more granular least-privilege IAM policies for application access to AWS services.
+
+Database
+
+The project uses:
+
+Amazon RDS PostgreSQL
+Database name: cloudapp
+PostgreSQL port: 5432
+Private subnets
+Encryption enabled
+Public accessibility disabled
+
+The database is intentionally not exposed directly to the Internet.
+
+Secrets Management
+
+Database credentials are managed using:
+
+AWS Secrets Manager
+
+Terraform generates the database password using the Random provider and stores the credentials in Secrets Manager.
+
+Database passwords are not exposed through Terraform outputs.
+
+Future application code will retrieve the credentials securely through Secrets Manager rather than hard-coding them.
+
+Monitoring & Alerting
+
+Current monitoring includes:
+
+CloudWatch
+EC2 CPU utilization alarm
+ALB unhealthy-host alarm
+SNS
+Infrastructure alert SNS topic
+CloudWatch alarms configured to publish to SNS
+
+The monitoring layer will be expanded as the application architecture grows.
+
+Terraform
+
+Terraform is used to provision and manage the AWS infrastructure.
+
+Current Terraform structure:
+
 terraform/
 ├── environments/
 │   └── dev/
@@ -287,56 +217,164 @@ terraform/
 │       └── rds.tf
 │
 └── modules/
-Upcoming Milestones
-Application Development
 
-Backend API
+Terraform files are separated by AWS service/layer rather than placing the entire infrastructure in a single file.
 
-Frontend application
+Terraform Workflow
 
-PostgreSQL database integration
+The standard workflow is:
 
-Health endpoint
+terraform init
+terraform fmt
+terraform validate
+terraform plan
+terraform apply
 
-CRUD/API functionality
+To inspect outputs:
 
-Application configuration
+terraform output
+
+To destroy the temporary environment:
+
+terraform destroy
+
+Always review the Terraform plan before applying changes.
+
+AWS Sandbox Strategy
+
+This project is being developed using a temporary AWS sandbox environment.
+
+The sandbox resources may be deleted when the sandbox session expires.
+
+Therefore:
+
+GitHub
+   ↓
+Permanent source of truth
+
+Terraform
+   ↓
+Reproducible infrastructure
+
+AWS Sandbox
+   ↓
+Temporary execution environment
+
+The infrastructure is designed to be recreated from Terraform rather than relying on manually configured AWS resources.
+
+Repository Structure
+aws-cloud-devops-project/
+│
+├── application/
+│   ├── backend/
+│   └── frontend/
+│
+├── docker/
+│
+├── docs/
+│   └── progress.md
+│
+├── modules/
+│
+├── terraform/
+│   ├── environments/
+│   │   └── dev/
+│   └── modules/
+│
+├── .github/
+│   └── workflows/
+│
+├── .gitignore
+└── README.md
+Development Roadmap
+Completed
+
+Git and GitHub setup
+
+Terraform setup
+
+AWS CLI setup
+
+S3 bucket
+
+VPC
+
+Public and private subnets
+
+Internet Gateway
+
+NAT Gateway
+
+Route tables
+
+IAM EC2 role
+
+Security groups
+
+EC2 Launch Template
+
+Application Load Balancer
+
+Target Group
+
+Auto Scaling Group
+
+Nginx application
+
+CloudWatch alarms
+
+SNS alerts
+
+RDS PostgreSQL
+
+Secrets Manager
+
+End-to-end ALB → EC2 verification
+
+Planned
+Application
+
+Build Python/FastAPI backend
+
+Build frontend
+
+PostgreSQL integration
+
+REST API
+
+Application health checks
 
 Application logging
 
-Error handling
-
-Testing
+Automated tests
 
 Docker
 
 Dockerfile
 
-Local container build
-
-Docker Compose for local development
-
 Containerized backend
 
-Containerized frontend
+Docker Compose
 
-Amazon ECR
+Local container testing
 
-ECR repository
+ECR
+
+Amazon ECR repository
 
 Docker image tagging
 
-Image push to ECR
-
-ECR lifecycle policy
+Image push
 
 Image scanning
+
+Lifecycle policy
 
 ECS / Fargate
 
 ECS cluster
 
-ECS task definition
+Task definition
 
 ECS service
 
@@ -344,165 +382,126 @@ Fargate deployment
 
 ALB → ECS integration
 
-ECS security groups
-
-ECS IAM roles
-
 CI/CD
 
 GitHub Actions
 
-CI workflow
-
 Automated testing
 
-Docker image build
+Linting
+
+Docker build
 
 ECR push
 
-Deployment workflow
-
-Environment variables/secrets
+ECS deployment
 
 Deployment verification
 
 Serverless
 
-Lambda function
+Lambda
 
 API Gateway
 
 DynamoDB
 
-Lambda IAM permissions
-
-API integration
-
-CloudWatch Lambda logs
-
-Messaging & Events
-
 SQS
-
-SNS advanced integrations
 
 EventBridge
 
-Event-driven workflow
-
-Dead-letter queue
-
-CDN / DNS / HTTPS
+DNS / HTTPS / CDN
 
 Route 53
 
-ACM certificate
-
-CloudFront
+ACM
 
 HTTPS
 
+CloudFront
+
 Custom domain
-
-S3 frontend hosting
-
-Security
-
-Least-privilege IAM
-
-Secrets Manager integration
-
-KMS
-
-CloudTrail
-
-Security best practices
-
-IAM policy review
-
-Network security review
 
 Terraform Advanced
 
 Terraform modules
 
-Reusable networking module
-
-Reusable compute module
-
-Reusable database module
-
 Environment separation
 
-Remote S3 backend
+Remote state
+
+S3 backend
 
 State locking
 
 Terraform CI validation
 
-Terraform plan in GitHub Actions
+Automated Terraform plan
 
-Cost & Reliability
+Security & Operations
+
+Least-privilege IAM
+
+KMS
+
+CloudTrail
+
+Advanced CloudWatch monitoring
 
 AWS Budgets
 
-Cost Explorer
-
-Resource tagging strategy
+Cost optimization
 
 Well-Architected review
 
-High availability review
-
 Disaster recovery considerations
 
-Sandbox cleanup procedure
+Project Principles
+Infrastructure as Code
 
-Verification Philosophy
+AWS infrastructure should be reproducible through Terraform.
 
-Every infrastructure milestone should follow:
+Security First
 
-Terraform Code
-      ↓
-terraform fmt
-      ↓
-terraform validate
-      ↓
-terraform plan
-      ↓
-Review changes
-      ↓
-terraform apply
-      ↓
-AWS CLI / Application verification
-      ↓
-Git commit
-      ↓
-Git push
-Important Sandbox Rule
+Resources should use private networking, security groups, IAM roles, encryption and least-privilege access wherever appropriate.
 
-The Pluralsight AWS Sandbox is temporary.
+Automation
 
-Therefore:
+Manual deployment steps should gradually be replaced with automated CI/CD workflows.
 
-GitHub
-  = Permanent source of truth
+Observability
 
-Terraform Code
-  = Permanent infrastructure definition
+Applications and infrastructure should expose meaningful metrics, logs and alerts.
 
-Terraform State
-  = Temporary learning state
+Cost Awareness
 
-Pluralsight AWS Sandbox
-  = Temporary execution environment
+The project is designed for learning and portfolio development, so unnecessary AWS resources should be avoided and temporary resources should be destroyed when no longer required.
 
-The infrastructure should always be reproducible from the Terraform code.
+Reproducibility
+
+The project should be capable of rebuilding the infrastructure from the GitHub repository rather than depending on manually created AWS resources.
 
 Current Status
 
-Completed through: RDS + Secrets Manager + CloudWatch/SNS
+Infrastructure foundation complete.
 
-Next milestone:
+The project currently has:
 
-Build the actual application and connect it to PostgreSQL.
+Terraform
+   │
+   ├── S3
+   ├── VPC
+   ├── Networking
+   ├── IAM
+   ├── Security Groups
+   ├── ALB
+   ├── EC2
+   ├── Auto Scaling
+   ├── CloudWatch
+   ├── SNS
+   ├── RDS PostgreSQL
+   └── Secrets Manager
+
+The next major milestone is:
+
+Build the real Python/FastAPI application and connect it securely to PostgreSQL.
