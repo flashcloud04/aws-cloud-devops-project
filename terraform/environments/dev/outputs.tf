@@ -86,3 +86,27 @@ output "alb_unhealthy_hosts_alarm_name" {
   description = "CloudWatch alarm for unhealthy ALB targets"
   value       = aws_cloudwatch_metric_alarm.alb_unhealthy_hosts.alarm_name
 }
+output "rds_identifier" {
+  description = "RDS PostgreSQL instance identifier"
+  value       = aws_db_instance.app.identifier
+}
+
+output "rds_endpoint" {
+  description = "RDS PostgreSQL endpoint"
+  value       = aws_db_instance.app.address
+}
+
+output "rds_port" {
+  description = "RDS PostgreSQL port"
+  value       = aws_db_instance.app.port
+}
+
+output "rds_database_name" {
+  description = "RDS PostgreSQL database name"
+  value       = aws_db_instance.app.db_name
+}
+
+output "database_secret_arn" {
+  description = "ARN of the database credentials secret"
+  value       = aws_secretsmanager_secret.db.arn
+}
