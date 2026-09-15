@@ -1,0 +1,72 @@
+# Project Progress
+
+## Day 0 — Environment Setup
+
+- [x] Git installed
+- [x] Terraform installed
+- [x] AWS CLI installed
+- [ ] GitHub repository
+- [ ] AWS Sandbox authentication
+
+## Day 1
+
+- [ ] Terraform project
+- [ ] AWS provider
+- [ ] S3
+- [ ] VPC
+
+## Day 2
+
+- [ ] IAM
+- [ ] Security Groups
+- [ ] EC2
+- [ ] Nginx
+
+## Day 3
+
+- [ ] Application Load Balancer
+- [ ] Target Group
+- [ ] Auto Scaling
+
+## Day 4
+
+- [ ] CloudFront
+- [ ] Route 53
+- [ ] ACM
+
+## Day 5
+
+- [ ] Lambda
+- [ ] API Gateway
+- [ ] DynamoDB
+
+## Day 6
+
+- [ ] RDS
+- [ ] Secrets Manager
+
+## Day 7
+
+- [ ] CloudWatch
+- [ ] SNS
+- [ ] SQS
+- [ ] EventBridge
+
+## Day 8
+
+- [ ] Docker
+- [ ] ECR
+- [ ] ECS/Fargate
+
+## Day 9
+
+- [ ] GitHub Actions
+- [ ] Terraform CI/CD
+
+## Day 10+
+
+- [ ] Terraform modules
+- [ ] Remote state
+- [ ] Security hardening
+- [ ] Documentation
+- [ ] Final architecture
