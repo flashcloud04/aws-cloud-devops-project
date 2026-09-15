@@ -70,3 +70,39 @@
 - [ ] Security hardening
 - [ ] Documentation
 - [ ] Final architecture
+
+
+## Progress
+
+### Day 0 — Project Setup
+- [x] Git and GitHub
+- [x] Terraform installation
+- [x] AWS CLI configuration
+- [x] Project repository created
+
+### Day 1 — Terraform + Networking
+- [x] Terraform project structure
+- [x] S3 bucket
+- [x] VPC
+- [x] Internet Gateway
+- [x] Public subnets
+- [x] Private subnets
+- [x] NAT Gateway
+- [x] Route tables
+- [x] Route table associations
+
+### Day 2 — IAM + Compute
+- [x] EC2 IAM role
+- [x] IAM instance profile
+- [x] SSM access
+- [x] ALB security group
+- [x] EC2 security group
+- [x] EC2 Launch Template
+- [x] Nginx
+- [x] Application Load Balancer
+- [x] Target Group
+- [x] ALB HTTP listener
+- [x] Auto Scaling Group
+- [x] Two EC2 instances across two AZs
+- [x] ALB health checks
+- [x] End-to-end ALB → EC2 test
