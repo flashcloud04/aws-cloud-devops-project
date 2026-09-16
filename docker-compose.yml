@@ -1,0 +1,45 @@
+services:
+
+  postgres:
+    image: postgres:17
+    container_name: aws-cloud-devops-postgres
+    restart: unless-stopped
+
+    environment:
+      POSTGRES_DB: cloudapp
+      POSTGRES_USER: appadmin
+      POSTGRES_PASSWORD: appadmin
+
+    ports:
+      - "5432:5432"
+
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U appadmin -d cloudapp"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+
+  backend:
+    build:
+      context: ./application/backend
+
+    container_name: aws-cloud-devops-backend
+    restart: unless-stopped
+
+    environment:
+      DATABASE_URL: postgresql+psycopg://appadmin:appadmin@postgres:5432/cloudapp
+
+    ports:
+      - "8000:8000"
+
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+
+volumes:
+  postgres_data:

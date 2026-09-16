@@ -42,29 +42,63 @@ resource "aws_launch_template" "app" {
   ]
 
   user_data = base64encode(<<-EOF
-    #!/bin/bash
+  #!/bin/bash
 
-    dnf update -y
-    dnf install -y nginx
+  set -e
 
-    systemctl enable nginx
-    systemctl start nginx
+  # Update packages
+  dnf update -y
 
-    cat > /usr/share/nginx/html/index.html <<'HTML'
-    <!DOCTYPE html>
-    <html>
-    <head>
-      <title>AWS Cloud DevOps Project</title>
-    </head>
+  # Install Docker
+  dnf install -y docker
 
-    <body>
-      <h1>AWS Cloud DevOps Project</h1>
-      <p>Application successfully served by Amazon EC2.</p>
-      <p>Infrastructure managed by Terraform.</p>
-    </body>
-    </html>
-    HTML
-  EOF
+  # Start Docker
+  systemctl enable docker
+  systemctl start docker
+
+  # Wait for Docker to be ready
+  until docker info >/dev/null 2>&1; do
+    sleep 2
+  done
+
+  # AWS region
+  AWS_REGION="${var.aws_region}"
+
+  # ECR repository
+  ECR_REPO="${aws_ecr_repository.backend.repository_url}"
+
+  # Login to ECR
+  aws ecr get-login-password --region "$AWS_REGION" | \
+    docker login --username AWS --password-stdin "$ECR_REPO"
+
+  # Pull application image
+  docker pull "$ECR_REPO:latest"
+
+  # Retrieve database credentials from Secrets Manager
+  SECRET_JSON=$(aws secretsmanager get-secret-value \
+    --secret-id "${aws_secretsmanager_secret.db.id}" \
+    --region "$AWS_REGION" \
+    --query SecretString \
+    --output text)
+
+  DB_USERNAME=$(echo "$SECRET_JSON" | python3 -c 'import sys,json; print(json.load(sys.stdin)["username"])')
+  DB_PASSWORD=$(echo "$SECRET_JSON" | python3 -c 'import sys,json; print(json.load(sys.stdin)["password"])')
+
+  # RDS endpoint
+ DB_HOST="${aws_db_instance.app.address}"
+
+  # Remove old container if it exists
+  docker rm -f aws-cloud-devops-backend 2>/dev/null || true
+
+  # Start FastAPI application
+  docker run -d \
+    --name aws-cloud-devops-backend \
+    --restart unless-stopped \
+    -p 8000:8000 \
+    -e DATABASE_URL="postgresql+psycopg://$DB_USERNAME:$DB_PASSWORD@$DB_HOST:5432/cloudapp" \
+    "$ECR_REPO:latest"
+
+EOF
   )
 
   tag_specifications {

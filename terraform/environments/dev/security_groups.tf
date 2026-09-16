@@ -49,9 +49,9 @@ resource "aws_security_group" "ec2" {
   vpc_id      = aws_vpc.main.id
 
   ingress {
-    description     = "HTTP from Application Load Balancer"
-    from_port       = 80
-    to_port         = 80
+    description     = "FastAPI from Application Load Balancer"
+    from_port       = 8000
+    to_port         = 8000
     protocol        = "tcp"
     security_groups = [aws_security_group.alb.id]
   }

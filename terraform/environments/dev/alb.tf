@@ -29,10 +29,14 @@ resource "aws_lb" "app" {
 # ============================================================
 
 resource "aws_lb_target_group" "app" {
-  name     = "aws-cloud-devops-tg"
-  port     = 80
+  name_prefix = "tg-"
+  port     = 8000
   protocol = "HTTP"
   vpc_id   = aws_vpc.main.id
+
+   lifecycle {
+    create_before_destroy = true
+  }
 
   health_check {
     enabled             = true
@@ -40,7 +44,7 @@ resource "aws_lb_target_group" "app" {
     unhealthy_threshold = 2
     timeout             = 5
     interval            = 30
-    path                = "/"
+    path                = "/health"
     protocol            = "HTTP"
     matcher             = "200"
   }

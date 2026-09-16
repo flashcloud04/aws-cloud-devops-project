@@ -110,3 +110,7 @@ output "database_secret_arn" {
   description = "ARN of the database credentials secret"
   value       = aws_secretsmanager_secret.db.arn
 }
+output "ecr_repository_url" {
+  description = "ECR repository URL for the backend application"
+  value       = aws_ecr_repository.backend.repository_url
+}
